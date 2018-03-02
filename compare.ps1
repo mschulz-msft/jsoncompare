@@ -4,7 +4,7 @@ param (
     [string]$directory
     )
 
-$files = Get-ChildItem -R -path C:\work-local\azure-rest-api-specs\* -include *.json -exclude .* |select-string 'swagger'
+$files = Get-ChildItem -R -path $directory\* -include *.json -exclude .* |select-string 'swagger'
 $fileslink = $files.Path |out-string 
 $fileslink | set-content $env:TEMP\files.txt
 
@@ -12,8 +12,6 @@ $temp = $env:TEMP
 
 $f = echo $temp\files.txt
 $list = get-content $f -Raw
-
-$i = 0
 
 foreach ($line in Get-Content $f) {
 
@@ -36,12 +34,12 @@ Write-Host "File location (full path): " $fileLocation
 $paths = $json.paths -split ";"
 
 
- Write-Host "Paths"
+# Write-Host "Paths"
 $paths | Format-LIst
  
 
 
-$i= 0
+#$i= 0
 
 ForEach ($path in $paths) {
 
@@ -63,8 +61,6 @@ ForEach ($path in $paths) {
         $actionsClean = $actionsClean -replace "=",""
         $actionsClean = $actionsClean -replace "}",""
         $actionsClean = $actionsClean -replace " ",""
-
-        write-host "clean" $actionsClean
     
         $action = ""
         $tags = ""
@@ -79,7 +75,7 @@ ForEach ($path in $paths) {
 
             if ($tags -ne ($operationIds[0])) {
                 Write-Host "File: " $fileLocation
-                add-content out.txt $filelocation
+                add-content $env:HOMEPATH\Documents\out.txt $filelocation
                 Write-Host "Paths: " $path
                 Write-Host "Action: " $action
                 Write-Host "Tags: " $tags
@@ -93,14 +89,14 @@ ForEach ($path in $paths) {
             Write-Host "OperationId: " $operationId
             
 
-            $i++
-            write-host $i
+            #$i++
+            #write-host $i
         }
     }
 }
 }
 
-<# Remove-Variable tags
+Remove-Variable tags
 Remove-Variable operationId
 Remove-Variable operationIds
 Remove-Variable actions
@@ -111,4 +107,3 @@ Remove-Variable paths
 Remove-Variable fileLocation
 Remove-Variable json
 Remove-Variable jsonRaw 
- #>
