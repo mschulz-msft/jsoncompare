@@ -1,7 +1,7 @@
 
 
 param (
-    [string]$directory
+    [parameter(Mandatory=$true)][string]$directory
     )
 
 $files = Get-ChildItem -R -path $directory\* -include *.json -exclude .* |select-string 'swagger'
@@ -75,7 +75,7 @@ ForEach ($path in $paths) {
 
             if ($tags -ne ($operationIds[0])) {
                 Write-Host "File: " $fileLocation
-                add-content $env:HOMEPATH\Documents\out.txt $filelocation
+                add-content $env:TEMP\tempout.txt $filelocation
                 Write-Host "Paths: " $path
                 Write-Host "Action: " $action
                 Write-Host "Tags: " $tags
@@ -95,6 +95,8 @@ ForEach ($path in $paths) {
     }
 }
 }
+
+get-content $env:TEMP\tempout.txt | get-unique > $env:HOMEPATH\Documents\out.txt
 
 Remove-Variable tags
 Remove-Variable operationId
